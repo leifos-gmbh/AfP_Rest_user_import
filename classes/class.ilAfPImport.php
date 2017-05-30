@@ -1,5 +1,4 @@
 <?php
-
 /* Copyright (c) 1998-2017 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 /**
@@ -9,7 +8,6 @@
 class ilAfPImport
 {
 	protected static $instance = null;
-	//protected $users_imported = array(); // import ids
 	protected $users_id_login = array();
 	protected $main_tag = "Users";
 	protected $import_dir;
@@ -149,6 +147,7 @@ class ilAfPImport
 					"name" => $user['user39'],
 					"lastname" => $user['user40'],
 					"email" => $user['email'],
+					"phone" => $user['phone'],
 					"street" => $user['street'],
 					"city" => $user['city'],
 					"postcode" => $user['postcode'],

@@ -70,7 +70,7 @@ class ilAfPImportXmlWriter
 			);
 
 			$this->writer->xmlElement('Login', null, $data['login']);
-			$this->writer->xmlElement('Role', array("Id"=>"il_0_role_4", "Type"=>"Global"),'User'); //TODO Ask which role we have to assign for the users.
+			$this->writer->xmlElement('Role', array("Id"=>"il_0_role_4", "Type"=>"Global"),'User');
 			$this->writer->xmlElement('Title', null, $data['title']);
 			$this->writer->xmlElement('Firstname', null, $data['name']);
 			$this->writer->xmlElement('Lastname', null, $data['lastname']);
@@ -78,25 +78,14 @@ class ilAfPImportXmlWriter
 			$this->writer->xmlElement('Street', null, $data['street']);
 			$this->writer->xmlElement('PostalCode', null, $data['postcode']);
 			$this->writer->xmlElement('City', null, $data['city']);
-			$this->writer->xmlElement('PhoneOffice', null, $data['phone']);//Is this OK?  //TODO some phones are like -> "phone": "0049 160 96588870 Patientenhandy"
-			$this->writer->xmlElement('Email',null, $data['email']);  //TODO some people doesn't have email... yes, it's true :S
+			$this->writer->xmlElement('PhoneOffice', null, $data['phone']);
+			$this->writer->xmlElement('Email',null, $data['email']);
 			$this->writer->xmlElement("Institution", null, $data['company']);
 
 			$this->writer->xmlEndTag('User');
 
 		}
 
-
 	}
 
 }
-
-/*
- * DATA NEEDED
- * User (Login, Role*, Password?, Firstname?, Lastname?, Title?, PersonalPicture?, Gender?, Email?, Birthday?,
-	Institution?, Street?, City?, PostalCode?, Country?, SelCountry?, PhoneOffice?, PhoneHome?,
-	PhoneMobile?, Fax?, Hobby?, Department?, Comment?, Matriculation?, Active?, ClientIP?,
-	TimeLimitOwner?, TimeLimitUnlimited?, TimeLimitFrom?, TimeLimitUntil?, TimeLimitMessage?,
-	ApproveDate?, AgreeDate?, AuthMode?, ExternalAccount?, Look?, LastUpdate?, LastLogin?, UserDefinedField*, AccountInfo*, GMapsInfo?)>
-
- */
