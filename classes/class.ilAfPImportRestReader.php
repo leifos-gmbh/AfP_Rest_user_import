@@ -44,11 +44,17 @@ class ilAfPImportRestReader
 	function getRestUsers()
 	{
 
-		//get the last cron execution timestamp
-		$cron_data = ilCronManager::getCronJobData('afpui');
-		$last_execution = $cron_data[0]['job_results_ts'];
+		//get last cron job execution
+		foreach(ilCronManager::getPluginJobs() as $item)
+		{
+			$job = $item[1];
+			if($job['job_id'] == "afpui") {
+				$last_execution = $job["job_result_ts"];
+				break;
+			}
+		}
 
-		//ilAfPLogger::getLogger()->write("Last execution = ".$last_execution);
+		ilAfPLogger::getLogger()->write("Last execution = ".$last_execution);
 
 		/** GET CONTACTS - RETURNS ERROR 500 */
 		/*
@@ -56,8 +62,7 @@ class ilAfPImportRestReader
 		*/
 
 		/** GET CONTACTS WITH LIMITS */
-		//TODO get the last cron execution and change this hardcoded timestamp
-		$target = $this->rest_base_url."contacts?method=crmgetChangedContactsLimit&response_type=JSON&session_id=".$this->session_id."&timestamp=1464510140&count=20&offset=0";
+		$target = $this->rest_base_url."contacts?method=crmgetChangedContactsLimit&response_type=JSON&session_id=".$this->session_id."&timestamp=".$last_execution."&count=20&offset=0";
 		ilAfPLogger::getLogger()->write("target changed contacts LIMIT = ".$target);
 		$response = file_get_contents($target);
 		$items = json_decode($response, true);
@@ -65,6 +70,5 @@ class ilAfPImportRestReader
 		return $items;
 
 	}
-
 
 }

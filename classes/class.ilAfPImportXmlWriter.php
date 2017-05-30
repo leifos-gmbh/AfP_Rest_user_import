@@ -8,11 +8,7 @@
 class ilAfPImportXmlWriter
 {
 	protected static $instance = null;
-
-	protected $users_imported = array();
-
 	protected $writer;
-
 	protected $main_tag = "Users";
 
 	function ilAfPImportXmlWriter()
@@ -60,42 +56,27 @@ class ilAfPImportXmlWriter
 
 	function fillData($a_data)
 	{
+		ilLoggerFactory::getRootLogger()->debug("*******   HASTA AKI bien 9 ");
 
 		foreach ($a_data as $data)
 		{
-			//login must be name.lastname or name.lastname.number
-			$login = $data['name'].".".$data['lastname'];
-			$count = 1;
-			while(in_array($login, $this->users_imported))
-			{
-				$login = $login.$count;
-				$count ++;
-			}
-
-			//gender forced as 'f' or 'm'
-			if(strtolower($data['gender']) == 'frau') {
-				$gender = 'f';
-			} else {
-				$gender = 'm';
-			}
-
-			array_push($this->users_imported, $login);
-
 			//TODO which value is the COURSE?
 			$this->writer->xmlStartTag(
 				'User',
 				array(
-					"Login" => $login,
+					// only check for the id, other stuff are the same
+					//"Id" =>  check first the user id for the import id. ( usr_data and object_data ) if is a new user id is NULL if is not new ID = ilias user id.
+					"Login" => $data['login'],
 					"Action" => "Insert"
 				)
 			);
 
-			$this->writer->xmlElement('Login', null, $login);
+			$this->writer->xmlElement('Login', null, $data['login']);
 			$this->writer->xmlElement('Role', array("Id"=>"il_0_role_4", "Type"=>"Global"),'User'); //TODO Ask which role we have to assign for the users.
 			$this->writer->xmlElement('Title', null, $data['title']);
 			$this->writer->xmlElement('Firstname', null, $data['name']);
 			$this->writer->xmlElement('Lastname', null, $data['lastname']);
-			$this->writer->xmlElement('Gender', null, $gender);
+			$this->writer->xmlElement('Gender', null, $data['gender']);
 			$this->writer->xmlElement('Street', null, $data['street']);
 			$this->writer->xmlElement('PostalCode', null, $data['postcode']);
 			$this->writer->xmlElement('City', null, $data['city']);

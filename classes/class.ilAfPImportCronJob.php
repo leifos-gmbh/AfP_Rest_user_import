@@ -35,8 +35,7 @@ class ilAfPImportCronJob extends ilCronJob
 
 	function getDefaultScheduleType()
 	{
-		//return self::SCHEDULE_TYPE_DAILY;
-		return self::SCHEDULE_TYPE_IN_MINUTES;
+		return self::SCHEDULE_TYPE_DAILY;
 	}
 
 	function hasAutoActivation()
