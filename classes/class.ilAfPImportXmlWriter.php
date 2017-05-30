@@ -59,11 +59,11 @@ class ilAfPImportXmlWriter
 		foreach ($a_data as $data)
 		{
 			//TODO which value is the COURSE?
+
 			$this->writer->xmlStartTag(
 				'User',
 				array(
-					// only check for the id, other stuff are the same
-					//"Id" =>  check first the user id for the import id. ( usr_data and object_data ) if is a new user id is NULL if is not new ID = ilias user id.
+					"Id" =>  ilAfPImport::getInstance()->lookupObjId($data['user_id']),
 					"Login" => $data['login'],
 					"Action" => "Insert"
 				)

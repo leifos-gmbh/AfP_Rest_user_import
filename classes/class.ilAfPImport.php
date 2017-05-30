@@ -232,7 +232,8 @@ class ilAfPImport
 		}
 	}
 
-	protected function lookupObjId($a_id)
+
+	function lookupObjId($a_id)
 	{
 		global $ilDB;
 
@@ -244,6 +245,6 @@ class ilAfPImport
 		{
 			return $row->obj_id;
 		}
-		return 0;
+		return null;
 	}
 }
