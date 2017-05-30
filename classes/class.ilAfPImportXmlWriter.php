@@ -56,8 +56,6 @@ class ilAfPImportXmlWriter
 
 	function fillData($a_data)
 	{
-		ilLoggerFactory::getRootLogger()->debug("*******   HASTA AKI bien 9 ");
-
 		foreach ($a_data as $data)
 		{
 			//TODO which value is the COURSE?
@@ -83,8 +81,6 @@ class ilAfPImportXmlWriter
 			$this->writer->xmlElement('PhoneOffice', null, $data['phone']);//Is this OK?  //TODO some phones are like -> "phone": "0049 160 96588870 Patientenhandy"
 			$this->writer->xmlElement('Email',null, $data['email']);  //TODO some people doesn't have email... yes, it's true :S
 			$this->writer->xmlElement("Institution", null, $data['company']);
-ilLoggerFactory::getRootLogger()->debug("user id => ".$data['user_id']);
-			$this->writer->xmlElement("ImportId", null, $data['user_id']);
 
 			$this->writer->xmlEndTag('User');
 
