@@ -97,66 +97,50 @@ class ilAfPImport
 	 */
 	protected function parseUserData($a_users)
 	{
-		$users_data = array();
+		$programs_migrate = ilObjAfPProgram::getProgramsToMigrate();
+		ilLoggerFactory::getRootLogger()->debug("programs_migrate = ",$programs_migrate);
 
+		$users_data = array();
 		foreach ($a_users as $user)
 		{
 			$error = null;
-			if($user['user39'] == "" and $user['user40'] == "")
+			if(in_array($user['user45'], $programs_migrate))
 			{
-				$error = "ERROR - User with id:".$user['cid']." doesn't have name and lastname";
-			}
-			else if($user['email'] == "")
-			{
-				$error = "ERROR - User with id:".$user['cid']." doesn't have email";
-			}
-			else
-			{
+				if ($user['user39'] == "" and $user['user40'] == "") {
+					$error = "ERROR - User with id:" . $user['cid'] . " doesn't have name and lastname";
 
-				//login must be name.lastname or name.lastname.number
-				if($user['user39'] == "" || $user['user40'] == "") {
-					$login = $user['user39'].$user['user40'];
-				}
-				else{
-					$login = $user['user39'].".".$user['user40'];
-				}
-				//login can't contain white spaces
-				$login = str_replace(" ", "_",$login);
-
-				$count = 1;
-				while(in_array($login, $this->users_id_login))
-				{
-					$login = $login.$count;
-					$count ++;
-				}
-
-				$this->users_id_login[$user['cid']] = $login;
-
-				//gender forced as 'f' or 'm'
-				if(strtolower($user['gender']) == 'frau') {
-					$gender = 'f';
+				} else if ($user['email'] == "") {
+					$error = "ERROR - User with id:" . $user['cid'] . " doesn't have email";
 				} else {
-					$gender = 'm';
+
+					$login = $this->generateLogin($user['user39'], $user['user40'], $user['cid']);
+
+					//gender forced as 'f' or 'm'
+					if (strtolower($user['gender']) == 'frau') {
+						$gender = 'f';
+					} else {
+						$gender = 'm';
+					}
+
+					$users_data[$user['cid']] = array(
+						"user_id" => $user['cid'],
+						"title" => $user['user38'],
+						"login" => $login,
+						"gender" => $gender,
+						"name" => $user['user39'],
+						"lastname" => $user['user40'],
+						"email" => $user['email'],
+						"phone" => $user['phone'],
+						"street" => $user['street'],
+						"city" => $user['city'],
+						"postcode" => $user['postcode'],
+						"company" => $user['company']
+					);
 				}
 
-				$users_data[$user['cid']] = array(
-					"user_id" => $user['cid'],
-					"title" => $user['user38'],
-					"login" => $login,
-					"gender" => $gender,
-					"name" => $user['user39'],
-					"lastname" => $user['user40'],
-					"email" => $user['email'],
-					"phone" => $user['phone'],
-					"street" => $user['street'],
-					"city" => $user['city'],
-					"postcode" => $user['postcode'],
-					"company" => $user['company']
-				);
-			}
-
-			if($error){
-				ilAfPLogger::getLogger()->write($error);
+				if ($error) {
+					ilAfPLogger::getLogger()->write($error);
+				}
 			}
 		}
 
@@ -231,6 +215,15 @@ class ilAfPImport
 		}
 	}
 
+	/**
+	 * @param string $a_string
+	 * @return string
+	 */
+	protected function umlauts($a_string)
+	{
+		return iconv("utf-8","ASCII//TRANSLIT",$a_string);
+	}
+
 
 	function lookupObjId($a_id)
 	{
@@ -245,5 +238,29 @@ class ilAfPImport
 			return $row->obj_id;
 		}
 		return null;
+	}
+
+	function generateLogin($a_name, $a_lastname, $a_user_id)
+	{
+		//login must be name.lastname or name.lastname.number
+		if ($a_name == "" || $a_lastname == "") {
+			$login = $a_name.$a_lastname;
+		} else {
+			$login = $a_name.".".$a_lastname;
+		}
+
+		//login can't contain white spaces nor umlauts
+		$login = str_replace(" ", "_", $login);
+		$login = $this->umlauts($login);
+
+		$count = 1;
+		while (in_array($login, $this->users_id_login)) {
+			$login = $login . $count;
+			$count++;
+		}
+
+		$this->users_id_login[$a_user_id] = $login;
+
+		return $login;
 	}
 }

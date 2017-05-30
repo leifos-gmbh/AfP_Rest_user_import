@@ -89,6 +89,14 @@ class ilObjAfPProgram extends ilObject
 
 	}
 
+	//for testing purposes
+	static function getProgramsToMigrate()
+	{
+		return array(
+			"BC"
+		);
+	}
+
 
 	static function getBasisPrograms()
 	{
