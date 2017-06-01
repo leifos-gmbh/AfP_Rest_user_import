@@ -24,3 +24,4 @@ if (!$ilDB->tableExists('afp_ids'))
 	$ilDB->createSequence("afp_ids");
 	$ilDB->addPrimaryKey("afp_ids", array("id", "afp_id"));
 }
+?>
