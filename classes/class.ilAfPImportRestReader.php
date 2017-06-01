@@ -19,6 +19,11 @@ class ilAfPImportRestReader
 		$this->connection();
 	}
 
+	function getBaseUrl()
+	{
+		return $this->rest_base_url;
+	}
+
 	protected function connection()
 	{
 		try
@@ -41,33 +46,31 @@ class ilAfPImportRestReader
 	}
 
 	// calls REST crmgetChangedContacts
-	function getRestUsers()
+	function getRestUsers($a_users_limit, $a_offset, $a_cron_last_execution)
 	{
-
-		//get last cron job execution
-		foreach(ilCronManager::getPluginJobs() as $item)
-		{
-			$job = $item[1];
-			if($job['job_id'] == "afpui") {
-				$last_execution = $job["job_result_ts"];
-				break;
-			}
-		}
-
-		ilAfPLogger::getLogger()->write("Last execution = ".$last_execution);
-
-		/** GET CONTACTS - RETURNS ERROR 500 */
-		/*
-		$target = $this->rest_base_url."contacts?method=crmgetChangedContacts&response_type=JSON&session_id=".$this->session_id."&timestamp=1464510140";
-		*/
-
 		/** GET CONTACTS WITH LIMITS */
-		$target = $this->rest_base_url."contacts?method=crmgetChangedContactsLimit&response_type=JSON&session_id=".$this->session_id."&timestamp=".$last_execution."&count=20&offset=0";
-		ilAfPLogger::getLogger()->write("target changed contacts LIMIT = ".$target);
+		$target = $this->rest_base_url."contacts?method=crmgetChangedContactsLimit&response_type=JSON&session_id=".$this->session_id."&timestamp=".$a_cron_last_execution."&count=".$a_users_limit."&offset=".$a_offset;
 		$response = file_get_contents($target);
 		$items = json_decode($response, true);
-		
+
 		return $items;
+
+	}
+
+	function getCountTotalUsers()
+	{
+		try
+		{
+			$target = $this->rest_base_url."contacts?method=crmcountContacts&response_type=JSON&session_id=".$this->session_id;
+			$response = file_get_contents($target);
+
+			return json_decode($response, true);
+		}
+		catch (Exception $e)
+		{
+			ilAfPLogger::getLogger()->write("Cant coun't the Contacts. ".$e->getMessage());
+		}
+
 
 	}
 

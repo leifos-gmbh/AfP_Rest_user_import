@@ -13,6 +13,7 @@ class ilAfPImport
 	protected $main_tag = "Users";
 	protected $import_dir;
 	protected $xml_file = "importFile.xml";
+	protected $users_rest_limit = 1000; // Query limit.
 
 	protected $training_period_to_import = array();
 
@@ -59,16 +60,34 @@ class ilAfPImport
 
 			$reader = new ilAfPImportRestReader();
 
-			//get users from rest api
-			$users_data = $reader->getRestUsers();
+			$total_users = (int)$reader->getCountTotalUsers();
 
-			//parse users to custom array
-			$user_data = $this->parseUserData($users_data);
+			//get last cron job execution
+			foreach(ilCronManager::getPluginJobs() as $item)
+			{
+				$job = $item[1];
+				if($job['job_id'] == "afpui") {
+					$last_execution = $job["job_result_ts"];
+				}
+				else{
+					$last_execution = 0;
+				}
+				break;
+			}
+
+			$users_parsed = array();
+			for($offset = 0; $offset <= $total_users; $offset = $offset + $this->users_rest_limit)
+			{
+				//get users from rest api
+				$users_data = $reader->getRestUsers($this->users_rest_limit, $offset, $last_execution);
+				$parsed = $this->parseUserData($users_data);
+				$users_parsed = array_merge($users_parsed,$parsed);
+			}
 
 			//create XML
 			$xml = new ilAfPImportXmlWriter();
 			$xml->setMainTag($this->main_tag);
-			$xml->fillData($user_data);
+			$xml->fillData($users_parsed);
 			$xml->createXMLFile();
 
 			//Save the users
