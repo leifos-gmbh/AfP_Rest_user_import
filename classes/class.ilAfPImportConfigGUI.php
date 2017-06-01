@@ -228,7 +228,7 @@ class ilAfPImportConfigGUI extends ilPluginConfigGUI
 			$form->setValuesByPost();
 			ilUtil::sendFailure($GLOBALS['lng']->txt('err_check_input'));
 
-			return $this->initProgramsForm($form);
+			return $this->definePrograms($form);
 		}
 
 		try
