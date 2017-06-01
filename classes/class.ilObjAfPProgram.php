@@ -108,13 +108,13 @@ class ilObjAfPProgram extends ilObject
 	static function getTrainingPeriodPrograms()
 	{
 		return array (
-			"Abruch" => "abgebrochen",
-			"Appr" => "bei uns approbiert",
-			"Appr+WB" => "bei uns approbiert + WB abgeschl.",
+			"Abruch" => "Abgebrochen",
+			"Appr" => "Bei uns approbiert",
+			"Appr+WB" => "Bei uns approbiert + WB abgeschl.",
 			"BC" => "BC",
 			"BCV" => "BC + Vorkolloquium",
 			"BT" => "nur Behandlungstätigkeit",
-			"inWB" => "in Weiterbildung",
+			"inWB" => "In Weiterbildung",
 			"VA" => "Vertiefte Ausbildung",
 			"WB" => "WB abgeschlossen"
 		);
@@ -133,7 +133,7 @@ class ilObjAfPProgram extends ilObject
 			"KJAP" => "KJP Psychoanalyse (Verklammerte A.)",
 			"KJTP" => "KJP TP",
 			"KJVT" => "KJP VT",
-			"NZ" => "nicht zutreffend",
+			"NZ" => "Nicht Zutreffend",
 			"PPAP" => "PP Psychoanalyse (Verklammerte A.",
 			"PPTP" => "PP TP",
 			"PPVT" => "PP VT",
@@ -158,7 +158,7 @@ class ilObjAfPProgram extends ilObject
 			"GPPTP" => "GruppenFK PP TP",
 			"GPPVT" => "GruppenFK PP VT",
 			"IFA" => "IFA",
-			"NZ" => "nicht zutreffend",
+			"NZ" => "Nicht Zutreffend",
 			"PGV" => "Psychosomatische Grundversorgung (PGV)",
 			"SE" => "Selbsterfahrung",
 			"Sozi" => "Socialtherapie / Sucht",
@@ -176,7 +176,7 @@ class ilObjAfPProgram extends ilObject
 			"FKPPAP" => "FK PP A",
 			"FKPPTP" => "FK PP TP",
 			"FKPPVT" => "FK PP VT",
-			"NZ" => "nicht zutreffend",
+			"NZ" => "Nicht Zutreffend",
 		);
 	}
 

@@ -169,13 +169,13 @@ class ilAfPImportConfigGUI extends ilPluginConfigGUI
 		$form->setFormAction($ilCtrl->getFormAction($this));
 		$form->setTitle($this->getPluginObject()->txt('form_programs_init'));
 
-		$this->addProgramsToForm($form, ilObjAfPProgram::getTrainingPeriodPrograms(), 'Training Period');
+		$this->addProgramsToForm($form, ilObjAfPProgram::getTrainingPeriodPrograms(), $this->getPluginObject()->txt("training_period"));
 
-		$this->addProgramsToForm($form, ilObjAfPProgram::getBasisPrograms(), 'Basis Programs');
+		$this->addProgramsToForm($form, ilObjAfPProgram::getBasisPrograms(), $this->getPluginObject()->txt("basis_programs"));
 
-		$this->addProgramsToForm($form, ilObjAfPProgram::getMoreOffersPrograms(), 'More Offers Programs');
+		$this->addProgramsToForm($form, ilObjAfPProgram::getMoreOffersPrograms(), $this->getPluginObject()->txt("more_offers_programs"));
 
-		$this->addProgramsToForm($form, ilObjAfPProgram::getCustomerSubjectPrograms(), 'Customer Subject Programs');
+		$this->addProgramsToForm($form, ilObjAfPProgram::getCustomerSubjectPrograms(), $this->getPluginObject()->txt("customer_subject_programs"));
 
 		$form->addCommandButton('savePrograms', $this->getPluginObject()->txt('btn_save_source_selection'));
 
