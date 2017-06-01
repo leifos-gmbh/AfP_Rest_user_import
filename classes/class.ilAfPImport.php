@@ -119,6 +119,7 @@ class ilAfPImport
 		$programs_migrate = ilObjAfPProgram::getProgramsToMigrate();
 
 		$users_data = array();
+		$send_failure = false;
 		foreach ($a_users as $user)
 		{
 			$error = null;
@@ -160,8 +161,13 @@ class ilAfPImport
 
 				if ($error) {
 					ilAfPLogger::getLogger()->write($error);
+					$send_failure = true;
 				}
 			}
+		}
+		if($send_failure)
+		{
+			ilUtil::sendFailure(ilAfPImportPlugin::getInstance()->txt('name_conflicts_check_log'),true);
 		}
 
 		return $users_data;

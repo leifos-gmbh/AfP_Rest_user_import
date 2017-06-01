@@ -18,6 +18,7 @@ training_period#:#Training Period
 basis_programs#:#Basis Programs
 more_offers_programs#:#More Offers Programs
 customer_subject_programs#:#Customer Subject Programs
+name_conflicts_check_log#:#Some users are not migrated because of name conflicts. Please check the log file.
 
 
 
