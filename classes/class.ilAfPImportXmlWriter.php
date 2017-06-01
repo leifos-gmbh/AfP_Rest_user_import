@@ -56,6 +56,7 @@ class ilAfPImportXmlWriter
 
 	function fillData($a_data)
 	{
+		global $ilSetting;
 		foreach ($a_data as $data)
 		{
 			//TODO which value is the COURSE?
@@ -69,8 +70,11 @@ class ilAfPImportXmlWriter
 				)
 			);
 
+			$client_id = $ilSetting->get("inst_id",0);
+
 			$this->writer->xmlElement('Login', null, $data['login']);
-			$this->writer->xmlElement('Role', array("Id"=>"il_0_role_4", "Type"=>"Global"),'User');
+			$this->writer->xmlElement('Role', array("Id"=>"il_".$client_id."_role_4", "Type"=>"Global", "Action" => "Assign"),'User');
+			//$this->writer->xmlElement('Role', array('Type' => 'Global','Id' => 4, 'Action' => 'Assign'), 'User');
 			$this->writer->xmlElement('Title', null, $data['title']);
 			$this->writer->xmlElement('Firstname', null, $data['name']);
 			$this->writer->xmlElement('Lastname', null, $data['lastname']);

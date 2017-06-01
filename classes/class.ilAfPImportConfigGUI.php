@@ -169,11 +169,13 @@ class ilAfPImportConfigGUI extends ilPluginConfigGUI
 		$form->setFormAction($ilCtrl->getFormAction($this));
 		$form->setTitle($this->getPluginObject()->txt('form_programs_init'));
 
+		$this->addProgramsToForm($form, ilObjAfPProgram::getTrainingPeriodPrograms(), 'Training Period');
+
 		$this->addProgramsToForm($form, ilObjAfPProgram::getBasisPrograms(), 'Basis Programs');
 
-		$this->addProgramsToForm($form, ilObjAfPProgram::getCustomPrograms(), 'Custom Programs');
+		$this->addProgramsToForm($form, ilObjAfPProgram::getMoreOffersPrograms(), 'More Offers Programs');
 
-		$this->addProgramsToForm($form, ilObjAfPProgram::getOtherPrograms(), 'Other Trainings');
+		$this->addProgramsToForm($form, ilObjAfPProgram::getCustomerSubjectPrograms(), 'Customer Subject Programs');
 
 		$form->addCommandButton('savePrograms', $this->getPluginObject()->txt('btn_save_source_selection'));
 
@@ -190,7 +192,7 @@ class ilAfPImportConfigGUI extends ilPluginConfigGUI
 
 		foreach($a_programs as $id => $desc)
 		{
-			$ref = new ilNumberInputGUI($id, 'ref_'.$id);
+			$ref = new ilNumberInputGUI("$desc [$id]", 'ref_'.$id);
 			$ref->setRequired(false);
 			$ref->setMinValue(1);
 			$ref->setSize(7);

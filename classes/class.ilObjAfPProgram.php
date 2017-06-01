@@ -89,76 +89,95 @@ class ilObjAfPProgram extends ilObject
 
 	}
 
-	//for testing purposes
+	/**
+	 * Only Users who belongs to this programs will be migrated to ILIAS
+	 * 	"BC", "BC + Vorkolloquium", "Vertiefte Ausbildung", "nur Behandlungstätigkeit", "in Weiterbildung"
+	 */
 	static function getProgramsToMigrate()
 	{
 		return array(
-			"BC"
+			"BC" => "BC",
+			"BCV" => "BC + Vorkolloquium",
+			"VA" => "Vertiefte Ausbildung",
+			"BT" => "nur Behandlungstätigkeit",
+			"inWB" => "in Weiterbildung"
 		);
 	}
 
+	//ausbildungsphase
+	static function getTrainingPeriodPrograms()
+	{
+		return array (
+			"Abruch" => "abgebrochen",
+			"Appr" => "bei uns approbiert",
+			"Appr+WB" => "bei uns approbiert + WB abgeschl.",
+			"BC" => "BC",
+			"BCV" => "BC + Vorkolloquium",
+			"BT" => "nur Behandlungstätigkeit",
+			"inWB" => "in Weiterbildung",
+			"VA" => "Vertiefte Ausbildung",
+			"WB" => "WB abgeschlossen"
+		);
+	}
 
+	//basisprogramme
 	static function getBasisPrograms()
 	{
-		$programs = array();
-
-		$programs["KJP_VT"] = "Kinder- und Jugendlichenpsychotherapeut für Verhaltenstherapie";
-		$programs["KJP_TP"] = "Kinder- und Jugendlichenpsychotherapeut für tiefenpsychologisch fundierte Psychotherapie";
-		$programs["KJP_Psychoanalyse_(Verklammerte_A)"] = "Kinder und Jugendlichenpsychotherapeut (Verklammerte Ausbildung) - Psychoanalyse";
-		$programs["PP_VT"] = "Psychologischer Psychotherapeut für Verhaltenstherapie";
-		$programs["PP_TP"] = "Psychologischer Psychotherapeut für tiefenpsychologisch fundierte Psychotherapie";
-		$programs["PP_Psychoanalyse_(Verklammerte_A)"] = "Psychologischer Psychotherapeut (Verklammerte Ausbildung) – Psychoanalyse";
-		$programs["FA_KJP_Psychiatrie_TP"] = "Facharzt für Kinder- und Jugendpsychiatrie und -psychotherapie im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-		$programs["FA_KJP_Psychiatrie_VT"] = "Facharzt für Kinder- und Jugendpsychiatrie und -psychotherapie im Verfahren Verhaltenstherapie";
-		$programs["FA_PP_Psychiatrie_TP"] = "Facharzt für Psychiatrie und Psychotherapie (Erwachsene) im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-		$programs["FA_PP_Psychiatrie_VT"] = "Facharzt für Psychiatrie und Psychotherapie (Erwachsene) im Verfahren Verhaltenstherapie";
-		$programs["A_PP_Psychosomatik_TP"] = "Facharzt für Psychotherapie (Erwachsene) im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-		$programs["FA_PP_Psychosomatik_VT"] = "Facharzt für Psychotherapie (Erwachsene) im Verfahren Verhaltenstherapie";
-		$programs["Zusatzbez_Psychoanalyse_PP"] = "Zusatzbezeichnung Psychoanalyse (Erwachsene)";
-		$programs["Zusatzbez_Psychoanalyse_KJ"] = "Zusatzbezeichnung Psychoanalyse für Kinder und Jugendliche";
-		$programs["Zusatzbez_TfP_PP"] = "Zusatzbezeichnung tiefenpsychologisch fundierte Psychotherapie (Erwachsene)";
-		$programs["Zusatzbez_TfP_KJ"] = "Zusatzbezeichnung tiefenpsychologisch fundierte Psychotherapie für Kinder und Jugendliche";
-		$programs["Zusatzbez_VT_PP"] = "Zusatzbezeichnung Verhaltenstherapie (Erwachsene)";
-		$programs["Zusatzbez_VT_KJ"] = "Zusatzbezeichnung Verhaltenstherapie für Kinder und Jugendliche";
-
-		return $programs;
+		return array (
+			"FA2PPTP" => "FA PP Psychosomatik TP",
+			"FA2PPVT" => "FA PP Psychosomatik VT",
+			"FAKJTP" => "FA KJP Psychiatrie TP",
+			"FAKJVT" => "FA KJP Psychiatrie VT",
+			"FAPPTP" => "FA PP Psychiatrie TP",
+			"FAPPVT" => "FA PP Psychiatrie VT",
+			"KJAP" => "KJP Psychoanalyse (Verklammerte A.)",
+			"KJTP" => "KJP TP",
+			"KJVT" => "KJP VT",
+			"NZ" => "nicht zutreffend",
+			"PPAP" => "PP Psychoanalyse (Verklammerte A.",
+			"PPTP" => "PP TP",
+			"PPVT" => "PP VT",
+			"ZBAPKJ" => "Zusatzbez. Psychoanalyse KJ",
+			"ZBAPPP" => "Zusatzbez. Psychoanalyse PP",
+			"ZBTPKJ" => "Zusatzbez. TfP KJ",
+			"ZBTPPP" => "Zusatzbez. TfP PP",
+			"ZBVTKJ" => "Zusatzbez. VT KJ",
+			"ZBVTPP" => "Zusatzbez. VT PP",
+		);
 	}
 
-	static function getCustomPrograms()
+	//Weitere Angebote
+	static function getMoreOffersPrograms()
 	{
-		$programs = array();
-
-		$programs["FK_KJP_A"] = "Fachkunde für Kinder- und Jugendlichenpsychotherapeuten im Verfahren der Psychoanalyse";
-		$programs["FK_KJP_VT"] = "Fachkunde für Kinder- und Jugendlichenpsychotherapie im Verfahren Verhaltenstherapie";
-		$programs["FK_KJP_TP"] = "Fachkunde für Kinder- und Jugendlichenpsychotherapie im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-		$programs["FK_PP_A"] = "Fachkunde für Psychologische Psychotherapeuten im Verfahren der Psychoanalyse";
-		$programs["FK_PP_VT"] = "Fachkunde für Psychologische Psychotherapeuten im Verfahren Verhaltenstherapie";
-		$programs["FK_PP_TP"] = "Fachkunde für Psychologische Psychotherapeuten im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-
-		return $programs;
+		return array (
+			"ATPMRKJ" => "Entspannung (AT, PMR - KJ)",
+			"ATPMRPP" => "Entspannung (AT, PMR - PP",
+			"Balint" => "Balintgruppe",
+			"GKJTP" => "GruppenFK KJP TP",
+			"GKJVT" => "GruppenFK KJP VT",
+			"GPPTP" => "GruppenFK PP TP",
+			"GPPVT" => "GruppenFK PP VT",
+			"IFA" => "IFA",
+			"NZ" => "nicht zutreffend",
+			"PGV" => "Psychosomatische Grundversorgung (PGV)",
+			"SE" => "Selbsterfahrung",
+			"Sozi" => "Socialtherapie / Sucht",
+			"Trauma" => "Traumatherapie / EMDR",
+		);
 	}
 
-	static function getOtherPrograms()
+	//Fachkunde
+	static function getCustomerSubjectPrograms()
 	{
-		$programs = array();
-
-		$programs ["GruppenFK_KJP_TP"] = "Gruppenfachkunde Kinder- und Jugendlichenpsychotherapie im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-		$programs ["GruppenFK_KJP_VT"] = "Gruppenfachkunde für Kinder- und Jugendlichenpsychotherapeuten im Verfahren Verhaltenstherapie";
-		$programs ["GruppenFK_PP_TP"] = "Gruppenfachkunde im Bereich der Erwachsenentherapie im Verfahren tiefenpsychologisch fundierte Psychotherapie";
-		$programs ["GruppenFK_PP_VT"] = "Gruppenfachkunde im Bereich der Erwachsenentherapie im Verfahren Verhaltenstherapie";
-		$programs ["Sozialtherapie_/_Sucht"] = "";
-		$programs ["Balintgruppe"] = "";
-		$programs ["IFA"] = "";
-		$programs ["Selbsterfahrung"] = "";
-		$programs ["Entspannung_(AT_PMR_-_PP)"] = "";
-		$programs ["Entspannung_(AT_PMR_-_KJ)"] = "";
-		$programs ["Psychosomatische_Grundversorgung_(PGV)"] = "";
-		$programs ["Traumatherapie_/_EMDR"] = "";
-
-		return $programs;
+		return array (
+			"FKKJAP" => "FK KJP A",
+			"FKKJTP" => "FK KJP TP",
+			"FKKJVT" => "FK KJP VT",
+			"FKPPAP" => "FK PP A",
+			"FKPPTP" => "FK PP TP",
+			"FKPPVT" => "FK PP VT",
+			"NZ" => "nicht zutreffend",
+		);
 	}
-
-
-
 
 }

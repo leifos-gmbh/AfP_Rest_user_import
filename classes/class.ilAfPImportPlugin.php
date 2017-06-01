@@ -47,7 +47,6 @@ class ilAfPImportPlugin extends ilCronHookPlugin
 	{
 		$job = new ilAfPImportCronJob();
 
-		ilAfPLogger::getLogger()->write("getinstance new job-> ".$job->getId());
 		return array($job);
 	}
 

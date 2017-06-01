@@ -9,6 +9,7 @@ class ilAfPImport
 {
 	protected static $instance = null;
 	protected $users_id_login = array();
+	protected $users_target = array();
 	protected $main_tag = "Users";
 	protected $import_dir;
 	protected $xml_file = "importFile.xml";
@@ -61,9 +62,6 @@ class ilAfPImport
 			//get users from rest api
 			$users_data = $reader->getRestUsers();
 
-			//TODO filter only users which field "xxxx" in array of hardcoded course codes.
-			$users_data = $this->filterByProgram($users_data);
-
 			//parse users to custom array
 			$user_data = $this->parseUserData($users_data);
 
@@ -80,6 +78,8 @@ class ilAfPImport
 
 			//Save import_id in object_data table
 			$this->insertImportIds();
+
+			$this->addUsersToObjects();
 
 			$this->releaseLock();
 
@@ -98,13 +98,12 @@ class ilAfPImport
 	protected function parseUserData($a_users)
 	{
 		$programs_migrate = ilObjAfPProgram::getProgramsToMigrate();
-		ilLoggerFactory::getRootLogger()->debug("programs_migrate = ",$programs_migrate);
 
 		$users_data = array();
 		foreach ($a_users as $user)
 		{
 			$error = null;
-			if(in_array($user['user45'], $programs_migrate))
+			if(array_key_exists($user['user45'], $programs_migrate))
 			{
 				if ($user['user39'] == "" and $user['user40'] == "") {
 					$error = "ERROR - User with id:" . $user['cid'] . " doesn't have name and lastname";
@@ -116,7 +115,7 @@ class ilAfPImport
 					$login = $this->generateLogin($user['user39'], $user['user40'], $user['cid']);
 
 					//gender forced as 'f' or 'm'
-					if (strtolower($user['gender']) == 'frau') {
+					if (strtolower($user['user36']) == 'frau') {
 						$gender = 'f';
 					} else {
 						$gender = 'm';
@@ -136,6 +135,8 @@ class ilAfPImport
 						"postcode" => $user['postcode'],
 						"company" => $user['company']
 					);
+
+					$this->users_target[$user['cid']] = $user['user45'];
 				}
 
 				if ($error) {
@@ -146,14 +147,6 @@ class ilAfPImport
 
 		return $users_data;
 	}
-
-	function filterByProgram($a_user_data)
-	{
-		//return only the members of specific courses.
-		//TODO
-		return $a_user_data;
-	}
-
 
 	/**
 	 * Release lock
@@ -215,16 +208,6 @@ class ilAfPImport
 		}
 	}
 
-	/**
-	 * @param string $a_string
-	 * @return string
-	 */
-	protected function umlauts($a_string)
-	{
-		return iconv("utf-8","ASCII//TRANSLIT",$a_string);
-	}
-
-
 	function lookupObjId($a_id)
 	{
 		global $ilDB;
@@ -253,6 +236,7 @@ class ilAfPImport
 		$login = str_replace(" ", "_", $login);
 		$login = $this->umlauts($login);
 
+
 		$count = 1;
 		while (in_array($login, $this->users_id_login)) {
 			$login = $login . $count;
@@ -262,5 +246,55 @@ class ilAfPImport
 		$this->users_id_login[$a_user_id] = $login;
 
 		return $login;
+	}
+
+	/**
+	 * @param string $a_string
+	 * @return string
+	 */
+	protected function umlauts($a_string)
+	{
+		//option 1 doesn't work in all systems.
+		return iconv("utf-8","ASCII//TRANSLIT",$a_string);
+	}
+
+
+	function addUsersToObjects()
+	{
+		global $rbacadmin;
+
+		require_once "./Services/Object/classes/class.ilObject2.php";
+		require_once "./Services/Membership/classes/class.ilParticipants.php";
+
+		foreach ($this->users_target as $user => $target)
+		{
+			$program = new ilObjAfPProgram();
+			$program_data = $program->getDataFromAfPId($target);
+			$ilias_ref = $program_data['ilias_ref_id'];
+
+			$obj_id = ilObject2::_lookupObjectId($ilias_ref);
+			$obj_type = ilObject2::_lookupType($obj_id);
+
+			$user_ilias_id = $this->lookupObjId($user);
+
+			switch ($obj_type)
+			{
+				case "crs":
+					$members = ilParticipants::getInstanceByObjId($obj_id);
+					$members->add($user_ilias_id,IL_CRS_MEMBER);
+					break;
+				case "prg":
+					require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
+					$prg = ilObjStudyProgramme::getInstanceByRefId($ilias_ref);
+					$prg->assignUser($user_ilias_id);
+					break;
+			}
+
+			//Force all the new users to have the role: User.
+			$rbacadmin->assignUser(4,$user_ilias_id);
+
+
+		}
+
 	}
 }
