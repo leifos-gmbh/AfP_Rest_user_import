@@ -13,7 +13,7 @@ class ilAfPImport
 	protected $main_tag = "Users";
 	protected $import_dir;
 	protected $xml_file = "importFile.xml";
-	protected $users_rest_limit = 1000; // Query limit.
+	protected $users_rest_limit = 500; // Query limit. Don't increase this value without increase also the memory limit of the servers.
 
 	protected $training_period_to_import = array();
 
