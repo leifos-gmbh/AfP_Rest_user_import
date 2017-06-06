@@ -285,8 +285,8 @@ class ilAfPImport
 
 		return strtolower(strtr($a_string, array(
 			"ä" => "ae",
-			"o" => "oe",
-			"u" => "ue",
+			"ö" => "oe",
+			"ü" => "ue",
 			"Ä" => "ae",
 			"Ö" => "oe",
 			"Ü" => "ue",
