@@ -280,7 +280,28 @@ class ilAfPImport
 	protected function umlauts($a_string)
 	{
 		//option 1 doesn't work in all systems.
-		return iconv("utf-8","ASCII//TRANSLIT",$a_string);
+		//setlocale(LC_CTYPE, 'de_DE');
+		//return iconv("utf-8","ASCII//TRANSLIT",$a_string);
+
+		return strtolower(strtr($a_string, array(
+			"ä" => "ae",
+			"o" => "oe",
+			"u" => "ue",
+			"Ä" => "ae",
+			"Ö" => "oe",
+			"Ü" => "ue",
+			"ß" => "ss",
+			"à" => "a",
+			"á" => "a",
+			"è" => "e",
+			"é" => "e",
+			"ì" => "i",
+			"í" => "i",
+			"ò" => "o",
+			"ó" => "o",
+			"ù" => "u",
+			"ú" => "u"
+		)));
 	}
 
 
