@@ -156,7 +156,7 @@ class ilAfPImport
 						"company" => $user['company']
 					);
 
-					$this->users_target[$user['cid']] = $user['user45'];
+					$this->users_target[$user['cid']] = array($user['user45'],$user['user50'],$user['user52'],$user['user48']);
 				}
 
 				if ($error) {
@@ -312,34 +312,35 @@ class ilAfPImport
 		require_once "./Services/Object/classes/class.ilObject2.php";
 		require_once "./Services/Membership/classes/class.ilParticipants.php";
 
-		foreach ($this->users_target as $user => $target)
+		foreach ($this->users_target as $user => $targets)
 		{
-			$program = new ilObjAfPProgram();
-			$program_data = $program->getDataFromAfPId($target);
-			$ilias_ref = $program_data['ilias_ref_id'];
-
-			$obj_id = ilObject2::_lookupObjectId($ilias_ref);
-			$obj_type = ilObject2::_lookupType($obj_id);
-
 			$user_ilias_id = $this->lookupObjId($user);
-
-			switch ($obj_type)
-			{
-				case "crs":
-					$members = ilParticipants::getInstanceByObjId($obj_id);
-					$members->add($user_ilias_id,IL_CRS_MEMBER);
-					break;
-				case "prg":
-					require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
-					$prg = ilObjStudyProgramme::getInstanceByRefId($ilias_ref);
-					$prg->assignUser($user_ilias_id);
-					break;
-			}
-
 			//Force all the new users to have the role: User.
 			$rbacadmin->assignUser(4,$user_ilias_id);
 
+			foreach($targets as $target)
+			{
+				$program = new ilObjAfPProgram();
+				$program_data = $program->getDataFromAfPId($target);
+				$ilias_ref = $program_data['ilias_ref_id'];
 
+				$obj_id = ilObject2::_lookupObjectId($ilias_ref);
+				$obj_type = ilObject2::_lookupType($obj_id);
+
+				switch ($obj_type)
+				{
+					case "crs":
+						$members = ilParticipants::getInstanceByObjId($obj_id);
+						$members->add($user_ilias_id,IL_CRS_MEMBER);
+						break;
+					case "prg":
+						require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
+						$prg = ilObjStudyProgramme::getInstanceByRefId($ilias_ref);
+						$prg->assignUser($user_ilias_id);
+						break;
+				}
+
+			}
 		}
 
 	}
