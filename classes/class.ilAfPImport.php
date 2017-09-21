@@ -334,6 +334,7 @@ class ilAfPImport
 						$members->add($user_ilias_id,IL_CRS_MEMBER);
 						break;
 					case "prg":
+						ilAfPLogger::getLogger()->write('Assigning to sprg: ' .$user.' to '. $ilias_ref);
 						require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
 						$prg = ilObjStudyProgramme::getInstanceByRefId($ilias_ref);
 						$prg->assignUser($user_ilias_id);
