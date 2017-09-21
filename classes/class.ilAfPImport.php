@@ -63,6 +63,7 @@ class ilAfPImport
 			$total_users = (int)$reader->getCountTotalUsers();
 
 			//get last cron job execution
+			/*
 			foreach(ilCronManager::getPluginJobs() as $item)
 			{
 				$job = $item[1];
@@ -74,6 +75,9 @@ class ilAfPImport
 				}
 				break;
 			}
+			*/
+			//They need to import all users every night to be able to update users in the webservice.
+			$last_execution = 0;
 
 			$users_parsed = array();
 			for($offset = 0; $offset <= $total_users; $offset = $offset + $this->users_rest_limit)
@@ -331,13 +335,30 @@ class ilAfPImport
 				{
 					case "crs":
 						$members = ilParticipants::getInstanceByObjId($obj_id);
-						$members->add($user_ilias_id,IL_CRS_MEMBER);
+						if(!$members->isMember($user_ilias_id))
+						{
+							$members->add($user_ilias_id,IL_CRS_MEMBER);
+							ilAfPLogger::getLogger()->write("user: ".$user_ilias_id." added to course:".$obj_id);
+						}
+						else
+						{
+							ilAfPLogger::getLogger()->write("user: ".$user_ilias_id." NOT added, is already in this course:".$obj_id);
+
+						}
 						break;
 					case "prg":
 						ilAfPLogger::getLogger()->write('Assigning to sprg: ' .$user.' to '. $ilias_ref);
 						require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
 						$prg = ilObjStudyProgramme::getInstanceByRefId($ilias_ref);
-						$prg->assignUser($user_ilias_id);
+						if(!$prg->hasAssignmentOf($user_ilias_id))
+						{
+							$prg->assignUser($user_ilias_id);
+							ilAfPLogger::getLogger()->write("user: ".$user_ilias_id." added to study program ref:".$ilias_ref);
+						}
+						else
+						{
+							ilAfPLogger::getLogger()->write("user: ".$user_ilias_id." NOT added, is already in this study program ref:".$ilias_ref);
+						}
 						break;
 				}
 
